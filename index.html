@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        #pingan_tm_leftpanel {
+            width: 99%;
+            padding: 20px;
+        }
+
+        #pingan_tm_imgcontainer {
+            width: 100%;
+            border: 1px solid black;
+            position: relative;
+        }
+
+        /* #pingan_tm_canvas {
+            width: 100%;
+        } */
+
+        #pingan_tm_img {
+            width: 100%;
+            z-index: 1;
+        }
+
+        #pingan_tm_imgmarker {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div id='pingan_tm_leftpanel'>
+        <div id='pingan_tm_imgcontainer'>
+            <!-- <canvas id='pingan_tm_canvas'></canvas> -->
+            <img id='pingan_tm_img' src='imgs/52.jpg' alt=''>
+            <svg id='pingan_tm_imgmarker' xmlns='http://www.w3.org/2000/svg' version='1.1'>
+                
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        // var canvas = document.getElementById('pingan_tm_canvas');
+        // ctx = canvas.getContext('2d');
+        let svgContainer = document.querySelector('#pingan_tm_imgmarker')
+        let img = new Image();
+        img.src = 'imgs/52.jpg';
+        stretchRate = 1;
+
+        let startX = null;
+        let startY = null;
+        let endX = null;
+        let endY = null;
+        let centerX = null;
+        let centerY = null;
+        let radius = null;
+        let count = 0;
+        
+        img.onload = function() {
+            stretchRate = img.width / pingan_tm_img.offsetWidth;
+            console.log(stretchRate);
+        }
+
+        let step = 1;
+        let currentNode = null;
+        let cycleEle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        cycleEle.setAttribute('stroke', 'blue');
+        cycleEle.setAttribute('stroke-width', 2);
+        cycleEle.setAttribute('stroke-opacity', 0.8);
+        cycleEle.setAttribute('fill', 'grey');
+        cycleEle.setAttribute('fill-opacity', 0.2);
+        svgContainer.appendChild(cycleEle);
+
+        svgContainer.addEventListener('click', function(e) {
+            switch(step) {
+                case 1:
+                    startX = e.offsetX;
+                    startY = e.offsetY;
+                    step = 2;
+                    break;
+                case 2:
+                    currentNode = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                    currentNode.setAttribute('id', 'tmp_' + count);
+                    currentNode.setAttribute('stroke', 'blue');
+                    currentNode.setAttribute('stroke-width', 2);
+                    currentNode.setAttribute('stroke-opacity', 0.8);
+                    currentNode.setAttribute('fill', 'red');
+                    currentNode.setAttribute('fill-opacity', 0.2);
+                    svgContainer.appendChild(currentNode);
+                    step = 3;
+                    break;
+                case 3:
+                    count++;
+                    step = 1;
+                    cycleEle.setAttribute("r", 0);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        svgContainer.addEventListener('mousemove', function(e){
+            if(step === 2) {
+                endX = e.offsetX;
+                endY = e.offsetY;
+
+                radius = Math.sqrt((startX - endX)**2 + (startY - endY)**2) / 2;
+                centerX = (startX + endX) / 2;
+                centerY = (startY + endY) / 2;
+                
+                cycleEle.setAttribute('cx', centerX);
+                cycleEle.setAttribute('cy', centerY);
+                cycleEle.setAttribute('r', radius);
+                
+            } else if (step === 3) {
+                // <polygon points="200,10 250,190 160,210" style="fill:lime;stroke:purple;stroke-width:1"/>
+                x = e.offsetX;
+                y = e.offsetY;
+                maxX = Math.max(startX, endX);
+                minX = Math.min(startX, endX);
+                x = (x > (centerX + radius)) ? maxX : ((x < (centerX - radius)) ? minX : x);
+
+                y1 = centerY + Math.sqrt(radius**2 - (x - centerX)**2);
+                y2 = centerY - Math.sqrt(radius**2 - (x - centerX)**2);
+
+                midX = x;
+                midY = (Math.abs(y1 - y) > Math.abs(y2 - y)) ? y2 : y1;
+
+                midX2 = endX - (midX - startX);
+                midY2 = endY - (midY - startY);
+
+                let point = `${startX},${startY} ${midX},${midY} ${endX},${endY} ${midX2},${midY2}`;
+
+                currentNode.setAttribute('points', point);
+            }
+        });
+    </script>
+</body>
+</html>
