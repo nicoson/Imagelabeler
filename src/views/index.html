@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title>
+    <link rel="stylesheet" href="./stylesheet/common.css">
+    <script src="./javascript/labeltool.js"></script>
+</head>
+<body>
+    <div id='pingan_tm_leftpanel'>
+        <div>
+            <input id='pingan_tm_imgselector' type="file" />
+        </div>
+        <div id='pingan_tm_imgcontainer'>
+            <!-- <canvas id='pingan_tm_canvas'></canvas> -->
+            <img id='pingan_tm_img' src='' alt=''>
+            <svg id='pingan_tm_imgmarker' xmlns='http://www.w3.org/2000/svg' version='1.1'></svg>
+        </div>
+    </div>
+
+    <script>
+        labeltool = null;
+
+        window.onload = function() {
+            let svgContainer = document.querySelector('#pingan_tm_imgmarker');
+            let imgContainer = document.querySelector('#pingan_tm_img');
+            labeltool = new labelTool(svgContainer, imgContainer);
+        }
+
+        document.querySelector('#pingan_tm_imgselector').addEventListener('change', function(e) {
+            imgData = window.URL.createObjectURL(e.target.files[0]);
+            document.querySelector('#pingan_tm_img').src = imgData;
+            labeltool.init(imgData);
+        });
+    </script>
+</body>
+</html>
