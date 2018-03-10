@@ -1,8 +1,17 @@
+/*!
+ * labelTool v1.0.0
+ * Copyright 2011-2018 Xiaohui Ni
+ * Copyright 2011-2018 Qiniu, Ltd.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+
 class labelTool {
-    constructor(svgContainer, imgContainer) {
+    constructor(svgContainer, imgContainer, datalist, count = 0) {
         this.img = null;
         this.svgContainer = svgContainer;
         this.imgContainer = imgContainer;
+        this.datalist = datalist;
+        this.count = count;
         this.stretchRate = 1;
 
         this.startX = null;
@@ -12,7 +21,6 @@ class labelTool {
         this.centerX = null;
         this.centerY = null;
         this.radius = null;
-        this.count = 0;
 
         this.step = 1;
 
@@ -29,14 +37,17 @@ class labelTool {
         }.bind(this)
     }
 
-    destroy() {
+    startTrace() {
+        createEvents();
+    }
+
+    stopTrace() {
         this.clickEvent = null;
         this.mouseMoveEvent = null;
     }
 
     createLabelMarkers() {
         this.currentNode = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-        this.currentNode.setAttribute('id', 'tmp_' + this.count);
         this.currentNode.setAttribute('stroke', '#1E90FF');
         this.currentNode.setAttribute('stroke-width', 1);
         this.currentNode.setAttribute('stroke-opacity', 1);
@@ -53,6 +64,14 @@ class labelTool {
         this.cycleEle.setAttribute('fill-opacity', 0.2);
         this.cycleEle.setAttribute('class', 'pingan-tm-selecthover');
         this.svgContainer.appendChild(this.cycleEle);
+
+        // <text x="0" y="15" fill="red">I love SVG</text>
+        this.textNode = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        this.textNode.setAttribute('id', 'tmp_text');
+        this.textNode.setAttribute('x', '0');
+        this.textNode.setAttribute('y', '0');
+        this.textNode.innerHTML = null;
+        this.svgContainer.appendChild(this.textNode);
     }
 
     createEvents() {
@@ -70,7 +89,13 @@ class labelTool {
                     this.count++;
                     this.step = 1;
                     this.cycleEle.setAttribute("r", 0);
-                    this.createLabelMarkers();
+                    let outputdata = {
+                        id: this.count,
+                        node: this.currentNode.cloneNode(true)
+                    }
+                    this.datalist.push(outputdata);
+                    this.svgContainer.appendChild(outputdata.node);
+                    this.currentNode.setAttribute('points', '');
                     break;
                 default:
                     break;
@@ -114,6 +139,11 @@ class labelTool {
 
                 this.currentNode.setAttribute('points', points);
             }
+
+            this.textNode.setAttribute('x', e.offsetX + 10);
+            this.textNode.setAttribute('y', e.offsetY - 10);
+            this.textNode.innerHTML = `(${e.offsetX}, ${e.offsetY})`;
+
         }.bind(this));
     }
 }

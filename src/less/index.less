@@ -1,0 +1,101 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 12px;
+}
+
+header {
+    height: 10vh;
+}
+
+section {
+    height: 85vh;
+    >div {
+        height: 100%;
+    }
+
+    #pingan_tm_leftpanel {
+        border: 1px solid grey;
+        padding: 2rem;
+
+		#pingan_tm_imgcontainer {
+			width: 100%;
+			border: 1px solid black;
+            position: relative;
+            overflow: auto;
+		}
+		
+		/* #pingan_tm_canvas {
+			width: 100%;
+		} */
+		
+		#pingan_tm_img {
+			width: 100%;
+			z-index: 1;
+		}
+		
+		#pingan_tm_imgmarker {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			left: 0;
+			top: 0;
+			z-index: 999;
+		}
+		
+		.pingan-tm-selecthover:hover {
+			animation: selectEffect 1s infinite;
+		}
+    }
+    
+    #pingan_tm_rightpanel {
+        border: 1px solid grey;
+
+        #pingan_tm_detailpanel {
+            height: 100%;
+
+            >div:first-child {
+                height: 90%;
+            }
+
+            >div:last-child {
+                height: 10%;
+            }
+
+            #pingan_tm_detail_tab {
+                >div {
+                    border: 1px solid #ccc;
+                    padding: 1rem;
+                }
+
+                ul {
+                    list-style: none;
+                    padding: 0;
+                }
+            }
+
+            #pingan_tm_detailpanel_btngroup {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                button {
+                    width: 45%;
+                    height: 60%;
+                }
+            }
+        }
+
+    }
+}
+
+footer {
+    height: 5vh;
+}
+
+
+.card-body {
+    padding: 1rem 1rem 0 1rem !important;
+}

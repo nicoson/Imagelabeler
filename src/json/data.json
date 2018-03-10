@@ -2,7 +2,7 @@
   "key": [
     {
       "id": "k0",
-      "standard_name": "",
+      "standard_name": "商标",
       "prob_names": [
         "平安银行"
       ],
@@ -19,7 +19,7 @@
     },
     {
       "id": "k1",
-      "standard_name": "",
+      "standard_name": "传票号",
       "prob_names": [
         "传票号"
       ],
@@ -36,7 +36,7 @@
     },
     {
       "id": "k2",
-      "standard_name": "",
+      "standard_name": "业务流水号",
       "prob_names": [
         "业务流水号"
       ],
@@ -53,7 +53,7 @@
     },
     {
       "id": "k3",
-      "standard_name": "",
+      "standard_name": "业务",
       "prob_names": [
         "申请业务"
       ],
@@ -70,7 +70,7 @@
     },
     {
       "id": "k4",
-      "standard_name": "",
+      "standard_name": "公司名",
       "prob_names": [
         "平安银行股份有限公司"
       ],
@@ -87,7 +87,7 @@
     },
     {
       "id": "k5",
-      "standard_name": "",
+      "standard_name": "网点",
       "prob_names": [
         "受理网点"
       ],
@@ -104,7 +104,7 @@
     },
     {
       "id": "k6",
-      "standard_name": "",
+      "standard_name": "日期",
       "prob_names": [
         "日期"
       ],

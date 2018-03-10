@@ -47,8 +47,11 @@ var paths = {
 	lessDest: destDir + '/stylesheet',
 	appjs: 'src/js/*.js',
 	appjsDest: destDir + '/javascript',
-	venderJS: ['vendor/jquery/dist/jquery.min.js', 'vendor/lodash/dist/lodash.min.js'],
-	venderJSDest: destDir + '/javascript/libs',
+	venderJS: ['bower_components/jquery/dist/jquery.min.js',
+				'bower_components/bootstrap/dist/js/bootstrap.min.js'],
+	venderJSDest: destDir + '/libs/js',
+	venderCSS: ['bower_components/bootstrap/dist/css/bootstrap.min.css'],
+	venderCSSDest: destDir + '/libs/css',
 	appviews: 'src/views/*.html',
 	appviewsDest: destDir + '/views',
 	appjson: 'src/json/*.json',
@@ -124,6 +127,8 @@ gulp.task("copy", function(){
 	.pipe(gulp.dest(paths.indexhtmlDest)),
 	gulp.src(paths.venderJS)
 	.pipe(gulp.dest(paths.venderJSDest)),
+	gulp.src(paths.venderCSS)
+	.pipe(gulp.dest(paths.venderCSSDest)),
 	gulp.src(paths.appjson)
 	.pipe(gulp.dest(paths.appjsonDest)),
 	gulp.src(paths.appviews)

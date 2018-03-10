@@ -5,28 +5,123 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <meta http-equiv='X-UA-Compatible' content='ie=edge'>
     <title>Document</title>
-    <link rel="stylesheet" href="./stylesheet/common.css">
+    <link rel="stylesheet" href="./stylesheet/index.css">
+    <link rel="stylesheet" href="./libs/css/bootstrap.min.css">
+    <script src="./javascript/app.js"></script>
     <script src="./javascript/labeltool.js"></script>
+    <script src="./libs/js/jquery.min.js"></script>
+    <script src="./libs/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <div id='pingan_tm_leftpanel'>
-        <div>
-            <input id='pingan_tm_imgselector' type="file" />
+    <header>
+        <p>平安票据标注系统</p>
+    </header>
+    <section class="container-fluid">
+        <div class="row">
+            <div id='pingan_tm_leftpanel' class="col-9">
+                <div>
+                    <input id='pingan_tm_imgselector' type="file" />
+                </div>
+                <div id='pingan_tm_imgcontainer'>
+                    <div>
+                        <!-- <canvas id='pingan_tm_canvas'></canvas> -->
+                        <img id='pingan_tm_img' src='' alt=''>
+                        <svg id='pingan_tm_imgmarker' xmlns='http://www.w3.org/2000/svg' version='1.1'></svg>
+                    </div>
+                </div>
+            </div>
+        
+            <div id='pingan_tm_rightpanel' class="col-3">
+                <div id="pingan_tm_detailpanel">
+                    <div id="pingan_tm_detail_tab_container">
+                        <nav>
+                            <div class="nav nav-tabs" id="pingan_tm_detail_tab_header" role="tablist">
+                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#pingan_tm_contentfiller" role="tab" aria-controls="nav-home" aria-selected="true">内容</a>
+                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#pingan_tm_keyvaluemarker" role="tab" aria-controls="nav-profile" aria-selected="false">键值</a>
+                                <!-- <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false"></a> -->
+                            </div>
+                        </nav>
+                        <div id="pingan_tm_detail_tab" class="tab-content">
+                            <div id="pingan_tm_contentfiller" class="tab-pane fade show active" role="tabpanel" aria-labelledby="nav-profile-tab"></div>
+                            <div id="pingan_tm_keyvaluemarker" class="tab-pane fade" role="tabpanel" aria-labelledby="nav-contact-tab">
+                                emptyttt
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div id="pingan_tm_detailpanel_btngroup">
+                        <button type="button" class="btn btn-secondary btn-sm">返回</button>
+                        <button type="button" class="btn btn-primary btn-sm">保存</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div id='pingan_tm_imgcontainer'>
-            <!-- <canvas id='pingan_tm_canvas'></canvas> -->
-            <img id='pingan_tm_img' src='' alt=''>
-            <svg id='pingan_tm_imgmarker' xmlns='http://www.w3.org/2000/svg' version='1.1'></svg>
-        </div>
-    </div>
+    </section>
+    <footer>
+        <p>@right reserved by Qiniu.com</p>
+    </footer>
+
 
     <script>
+        class NiuArray extends Array {
+            constructor(...args) {
+                // 调用父类Array的constructor()
+                super(...args)
+            }
+            addContainer (Container) {
+                this.Container = Container;
+            }
+            push (...args) {
+                console.log('监听到数组的变化啦！');
+                // 调用父类原型push方法
+                super.push(...args)
+                refreshList(this.Container, DATA);
+                return this
+            }
+        }
         labeltool = null;
+        DATA = new NiuArray();  //  2-way binding page data
+        DATA.addContainer(document.querySelector("#pingan_tm_contentfiller"));
+        // Object.defineProperties(DATA, {
+        //     'key': {
+        //         set: function() {
+        //             console.log('set set');
+        //         },
+        //         get: function() {
+        //             console.log("Hi");
+        //             return this;
+        //         }
+        //     },
+        //     'value': {
+        //         set: function() {
+        //             console.log('set set');
+        //         },
+        //         get: function() {
+        //             console.log("Hi");
+        //             return this;
+        //         }
+        //     },
+        //     'binary_relations': {
+        //         set: function() {
+        //             console.log('set set');
+        //         },
+        //         get: function() {
+        //             console.log("Hi");
+        //             return this;
+        //         }
+        //     }
+        // });
 
         window.onload = function() {
             let svgContainer = document.querySelector('#pingan_tm_imgmarker');
             let imgContainer = document.querySelector('#pingan_tm_img');
-            labeltool = new labelTool(svgContainer, imgContainer);
+            labeltool = new labelTool(svgContainer, imgContainer, DATA);
+
+            //  initial tabs by bootstrap
+            $('#pingan_tm_detail_tab_header a').on('click', function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
         }
 
         document.querySelector('#pingan_tm_imgselector').addEventListener('change', function(e) {
@@ -34,6 +129,55 @@
             document.querySelector('#pingan_tm_img').src = imgData;
             labeltool.init(imgData);
         });
+
+        refreshList = function(Container, data) {
+            let tmp = '';
+            data.forEach(function(datum){
+                tmp +=  `<div class="card bg-light mb-3">
+                            <div class="card-header">${datum.id}</div>
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">内容</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" placeholder="content" value="${datum.standard_name || ''}" ／>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">权重</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" name="quantity" min="1" max="5" value="${datum.weight || 1}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+            });
+            Container.innerHTML = tmp;
+        }
+
+        loadTemplateLabels = function() {
+            fetch('/json/data.json').then(e => e.json()).then(function(data) {
+                let tmplist = [];
+                data.key.forEach(e => tmplist.push({
+                    position: e.coord,
+                    standard_name: e.standard_name,
+                    weight: e.weight,
+                    isKey: true,
+                    isTitle: e.isTitle
+                }));
+                
+                data.value.forEach(e => tmplist.push({
+                    position: e.coord,
+                    standard_name: e.standard_name,
+                    weight: e.weight,
+                    isKey: false,
+                    isTitle: e.isTitle
+                }));
+                
+                DATA = new NiuArray();
+                DATA.push(tmplist);
+            });
+        }
+
     </script>
 </body>
 </html>
