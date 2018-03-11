@@ -109,7 +109,7 @@ gulp.task('js', function() {
 		.pipe(browserSync.reload({stream:true}));
 	}else{
 		return gulp.src(paths.appjs)
-		.pipe(babel({presets: ['es2015']}))
+		// .pipe(babel({presets: ['es2015']}))
 		.pipe(gulp.dest(paths.appjsDest))
 		.pipe(browserSync.reload({stream:true}));
 	}

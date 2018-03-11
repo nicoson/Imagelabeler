@@ -7,49 +7,49 @@
     <title>Document</title>
     <link rel="stylesheet" href="./stylesheet/index.css">
     <link rel="stylesheet" href="./libs/css/bootstrap.min.css">
-    <script src="./javascript/app.js"></script>
-    <script src="./javascript/labeltool.js"></script>
     <script src="./libs/js/jquery.min.js"></script>
     <script src="./libs/js/bootstrap.min.js"></script>
+    <script src="./javascript/labeltool.js"></script>
 </head>
 <body>
     <header>
-        <p>平安票据标注系统</p>
+        <p>七牛票据标注系统</p>
     </header>
     <section class="container-fluid">
         <div class="row">
-            <div id='pingan_tm_leftpanel' class="col-9">
+            <div id='qiniu_tm_leftpanel' class="col-9">
                 <div>
-                    <input id='pingan_tm_imgselector' type="file" />
+                    <input id='qiniu_tm_imgselector' type="file" />
                 </div>
-                <div id='pingan_tm_imgcontainer'>
+                <div id='qiniu_tm_imgcontainer'>
                     <div>
-                        <!-- <canvas id='pingan_tm_canvas'></canvas> -->
-                        <img id='pingan_tm_img' src='' alt=''>
-                        <svg id='pingan_tm_imgmarker' xmlns='http://www.w3.org/2000/svg' version='1.1'></svg>
+                        <!-- <canvas id='qiniu_tm_canvas'></canvas> -->
+                        <img id='qiniu_tm_img' src='' alt=''>
+                        <svg id='qiniu_tm_imgmarker' xmlns='http://www.w3.org/2000/svg' version='1.1'></svg>
                     </div>
                 </div>
             </div>
         
-            <div id='pingan_tm_rightpanel' class="col-3">
-                <div id="pingan_tm_detailpanel">
-                    <div id="pingan_tm_detail_tab_container">
-                        <nav>
-                            <div class="nav nav-tabs" id="pingan_tm_detail_tab_header" role="tablist">
-                                <a class="nav-item nav-link active" id="pingan_tm_tab_contentfiller" data-toggle="tab" href="#pingan_tm_contentfiller" role="tab" aria-controls="nav-home" aria-selected="true">内容</a>
-                                <a class="nav-item nav-link" id="pingan_tm_tab_keyvaluemarker" data-toggle="tab" href="#pingan_tm_keyvaluemarker" role="tab" aria-controls="nav-profile" aria-selected="false">键值</a>
-                                <!-- <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false"></a> -->
-                            </div>
-                        </nav>
-                        <div id="pingan_tm_detail_tab" class="tab-content">
-                            <div id="pingan_tm_contentfiller" class="tab-pane fade show active" role="tabpanel" aria-labelledby="nav-profile-tab"></div>
-                            <div id="pingan_tm_keyvaluemarker" class="tab-pane fade" role="tabpanel" aria-labelledby="nav-contact-tab">
-                                emptyttt
-                            </div>
+            <div id='qiniu_tm_rightpanel' class="col-3">
+                <div id="qiniu_tm_detailpanel">
+                    <div id="qiniu_tm_detailpanel_toolbox">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-primary active">
+                                <input type="radio" name="options" autocomplete="off" checked> 标注
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" autocomplete="off"> 设Key
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" autocomplete="off"> 设Value
+                            </label>
                         </div>
                     </div>
+                    <div id="qiniu_tm_detailpanel_content">
+                        <div id="qiniu_tm_contentfiller" class="tab-pane fade show active" role="tabpanel" aria-labelledby="nav-profile-tab"></div>
+                    </div>
     
-                    <div id="pingan_tm_detailpanel_btngroup">
+                    <div id="qiniu_tm_detailpanel_btngroup">
                         <button type="button" class="btn btn-secondary btn-sm">返回</button>
                         <button type="button" class="btn btn-primary btn-sm">保存</button>
                     </div>
@@ -62,139 +62,6 @@
     </footer>
 
 
-    <script>
-        class NiuArray extends Array {
-            constructor(...args) {
-                // 调用父类Array的constructor()
-                super(...args)
-            }
-            addContainer (Container) {
-                this.Container = Container;
-            }
-            push (...args) {
-                console.log('监听到数组的变化啦！');
-                // 调用父类原型push方法
-                super.push(...args)
-                refreshList(this.Container, DATA);
-                return this
-            }
-            splice (...args) {
-                console.log('监听到数组的变化啦！');
-                // 调用父类原型push方法
-                super.splice(...args)
-                refreshList(this.Container, DATA);
-                return this
-            }
-        }
-        labeltool = null;
-        DATA = new NiuArray();  //  2-way binding page data
-        DATA.addContainer(document.querySelector("#pingan_tm_contentfiller"));
-
-        window.onload = function() {
-            let svgContainer = document.querySelector('#pingan_tm_imgmarker');
-            let imgContainer = document.querySelector('#pingan_tm_img');
-            labeltool = new labelTool(svgContainer, imgContainer, DATA);
-
-            //  initial tabs by bootstrap
-            $('#pingan_tm_detail_tab_header a').on('click', function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-            });
-        }
-
-        document.querySelector('#pingan_tm_imgselector').addEventListener('change', function(e) {
-            imgData = window.URL.createObjectURL(e.target.files[0]);
-            document.querySelector('#pingan_tm_img').src = imgData;
-            labeltool.init(imgData);
-        });
-
-        refreshList = function(Container, data) {
-            let tmp = '';
-            data.forEach(function(datum){
-                tmp +=  `<div class="card bg-light mb-3">
-                            <div class="card-header">
-                                ${datum.id}
-                                <button type="button" class="close" aria-label="Close">
-                                    <span aria-hidden="true" class="js-pingan-tm-tab-remove" data-id="${datum.id || ''}">&times;</span>
-                                </button>
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">内容</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control js-pingan-tm-focus" placeholder="content" data-id="${datum.id || ''}" value="${datum.standard_name || ''}" ／>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label">权重</label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control js-pingan-tm-focus" name="quantity" min="1" max="5" data-id="${datum.id || ''}" value="${datum.weight || 1}" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
-            });
-            Container.innerHTML = tmp;
-
-            document.querySelectorAll(".js-pingan-tm-focus").forEach(ele => ele.addEventListener("focus", function(e) {
-                let ind = DATA.findIndex(t => t.id == e.target.dataset.id);
-                let className = DATA[ind].node.getAttribute('class') + ' pingan-tm-selecthover-on';
-                DATA[ind].node.setAttribute('class', className);
-            }));
-
-            document.querySelectorAll(".js-pingan-tm-focus").forEach(ele => ele.addEventListener("blur", function(e) {
-                let ind = DATA.findIndex(t => t.id == e.target.dataset.id);
-                let className = DATA[ind].node.getAttribute('class').replace(' pingan-tm-selecthover-on', '');
-                DATA[ind].node.setAttribute('class', className);
-            }));
-
-            document.querySelectorAll(".js-pingan-tm-tab-remove").forEach(ele => ele.addEventListener("click", function(e) {
-                let ind = DATA.findIndex(t => t.id == e.target.dataset.id);
-                DATA[ind].node.remove();
-                DATA.splice(ind, 1);
-            }));
-        }
-
-        loadTemplateLabels = function() {
-            fetch('/json/data.json').then(e => e.json()).then(function(data) {
-                let tmplist = [];
-                data.key.forEach(e => tmplist.push({
-                    position: e.coord,
-                    standard_name: e.standard_name,
-                    weight: e.weight,
-                    isKey: true,
-                    isTitle: e.isTitle
-                }));
-                
-                data.value.forEach(e => tmplist.push({
-                    position: e.coord,
-                    standard_name: e.standard_name,
-                    weight: e.weight,
-                    isKey: false,
-                    isTitle: e.isTitle
-                }));
-                
-                DATA = new NiuArray();
-                DATA.push(tmplist);
-            });
-        }
-
-        let keyvaluemarkerEle = document.querySelector("#pingan_tm_tab_keyvaluemarker");
-        keyvaluemarkerEle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            labeltool.stopTrace();
-            DATA.map(function(datum) {
-                return datum.node.addEventListener("click", function(e) {
-                    console.log(this.id);
-                }.bind(datum));
-            });
-        }, true);
-
-        let contentfillerEle = document.querySelector("#pingan_tm_tab_contentfiller");
-        contentfillerEle.addEventListener('click', function(e) {
-            labeltool.startTrace();
-        });
-
-    </script>
+    <script src="./javascript/app.js" defer></script>
 </body>
 </html>

@@ -47,12 +47,12 @@ class labelTool {
 
     createLabelMarkers() {
         this.currentNode = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-        this.currentNode.setAttribute('stroke', '#1E90FF');
+        this.currentNode.setAttribute('stroke', '#28a745');
         this.currentNode.setAttribute('stroke-width', 1);
         this.currentNode.setAttribute('stroke-opacity', 1);
-        this.currentNode.setAttribute('fill', '#1E90FF');
+        this.currentNode.setAttribute('fill', '#28a745');
         this.currentNode.setAttribute('fill-opacity', 0.2);
-        this.currentNode.setAttribute('class', 'pingan-tm-selecthover');
+        this.currentNode.setAttribute('class', 'qiniu-tm-selecthover');
         this.svgContainer.appendChild(this.currentNode);
         
         this.cycleEle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -131,16 +131,19 @@ class labelTool {
                 this.step = 3;
                 break;
             case 3:
-                this.count++;
                 this.step = 1;
                 this.cycleEle.setAttribute("r", 0);
+                this.currentNode.setAttribute('data-id', this.count);
                 let outputdata = {
                     id: this.count,
-                    node: this.currentNode.cloneNode(true)
+                    node: this.currentNode.cloneNode(true),
+                    bbox: this.currentNode.getAttribute('points').split(' ').map(e => e.split(',')),
+                    isKey: false
                 }
                 this.datalist.push(outputdata);
                 this.svgContainer.appendChild(outputdata.node);
                 this.currentNode.setAttribute('points', '');
+                this.count++;
                 break;
             default:
                 break;
