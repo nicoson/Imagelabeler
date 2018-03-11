@@ -45,7 +45,9 @@ section {
 			z-index: 999;
 		}
 		
-		.pingan-tm-selecthover:hover {
+		.pingan-tm-selecthover-on, .pingan-tm-selecthover:hover {
+            fill: red;
+            stroke: red;
 			animation: selectEffect 1s infinite;
 		}
     }
@@ -96,6 +98,15 @@ footer {
 }
 
 
+// components css
 .card-body {
     padding: 1rem 1rem 0 1rem !important;
+}
+
+
+
+@keyframes selectEffect {
+	0%   {stroke-opacity: 1; fill-opacity: 0.2}
+	50%  {stroke-opacity: 0.5; fill-opacity: 0.1}
+	100%  {stroke-opacity: 1; fill-opacity: 0.2}
 }

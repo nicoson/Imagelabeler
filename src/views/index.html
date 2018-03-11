@@ -36,8 +36,8 @@
                     <div id="pingan_tm_detail_tab_container">
                         <nav>
                             <div class="nav nav-tabs" id="pingan_tm_detail_tab_header" role="tablist">
-                                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#pingan_tm_contentfiller" role="tab" aria-controls="nav-home" aria-selected="true">内容</a>
-                                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#pingan_tm_keyvaluemarker" role="tab" aria-controls="nav-profile" aria-selected="false">键值</a>
+                                <a class="nav-item nav-link active" id="pingan_tm_tab_contentfiller" data-toggle="tab" href="#pingan_tm_contentfiller" role="tab" aria-controls="nav-home" aria-selected="true">内容</a>
+                                <a class="nav-item nav-link" id="pingan_tm_tab_keyvaluemarker" data-toggle="tab" href="#pingan_tm_keyvaluemarker" role="tab" aria-controls="nav-profile" aria-selected="false">键值</a>
                                 <!-- <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false"></a> -->
                             </div>
                         </nav>
@@ -78,39 +78,17 @@
                 refreshList(this.Container, DATA);
                 return this
             }
+            splice (...args) {
+                console.log('监听到数组的变化啦！');
+                // 调用父类原型push方法
+                super.splice(...args)
+                refreshList(this.Container, DATA);
+                return this
+            }
         }
         labeltool = null;
         DATA = new NiuArray();  //  2-way binding page data
         DATA.addContainer(document.querySelector("#pingan_tm_contentfiller"));
-        // Object.defineProperties(DATA, {
-        //     'key': {
-        //         set: function() {
-        //             console.log('set set');
-        //         },
-        //         get: function() {
-        //             console.log("Hi");
-        //             return this;
-        //         }
-        //     },
-        //     'value': {
-        //         set: function() {
-        //             console.log('set set');
-        //         },
-        //         get: function() {
-        //             console.log("Hi");
-        //             return this;
-        //         }
-        //     },
-        //     'binary_relations': {
-        //         set: function() {
-        //             console.log('set set');
-        //         },
-        //         get: function() {
-        //             console.log("Hi");
-        //             return this;
-        //         }
-        //     }
-        // });
 
         window.onload = function() {
             let svgContainer = document.querySelector('#pingan_tm_imgmarker');
@@ -134,24 +112,47 @@
             let tmp = '';
             data.forEach(function(datum){
                 tmp +=  `<div class="card bg-light mb-3">
-                            <div class="card-header">${datum.id}</div>
+                            <div class="card-header">
+                                ${datum.id}
+                                <button type="button" class="close" aria-label="Close">
+                                    <span aria-hidden="true" class="js-pingan-tm-tab-remove" data-id="${datum.id || ''}">&times;</span>
+                                </button>
+                            </div>
                             <div class="card-body">
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">内容</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" placeholder="content" value="${datum.standard_name || ''}" ／>
+                                        <input type="text" class="form-control js-pingan-tm-focus" placeholder="content" data-id="${datum.id || ''}" value="${datum.standard_name || ''}" ／>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">权重</label>
                                     <div class="col-sm-9">
-                                        <input type="number" class="form-control" name="quantity" min="1" max="5" value="${datum.weight || 1}" />
+                                        <input type="number" class="form-control js-pingan-tm-focus" name="quantity" min="1" max="5" data-id="${datum.id || ''}" value="${datum.weight || 1}" />
                                     </div>
                                 </div>
                             </div>
                         </div>`;
             });
             Container.innerHTML = tmp;
+
+            document.querySelectorAll(".js-pingan-tm-focus").forEach(ele => ele.addEventListener("focus", function(e) {
+                let ind = DATA.findIndex(t => t.id == e.target.dataset.id);
+                let className = DATA[ind].node.getAttribute('class') + ' pingan-tm-selecthover-on';
+                DATA[ind].node.setAttribute('class', className);
+            }));
+
+            document.querySelectorAll(".js-pingan-tm-focus").forEach(ele => ele.addEventListener("blur", function(e) {
+                let ind = DATA.findIndex(t => t.id == e.target.dataset.id);
+                let className = DATA[ind].node.getAttribute('class').replace(' pingan-tm-selecthover-on', '');
+                DATA[ind].node.setAttribute('class', className);
+            }));
+
+            document.querySelectorAll(".js-pingan-tm-tab-remove").forEach(ele => ele.addEventListener("click", function(e) {
+                let ind = DATA.findIndex(t => t.id == e.target.dataset.id);
+                DATA[ind].node.remove();
+                DATA.splice(ind, 1);
+            }));
         }
 
         loadTemplateLabels = function() {
@@ -177,6 +178,22 @@
                 DATA.push(tmplist);
             });
         }
+
+        let keyvaluemarkerEle = document.querySelector("#pingan_tm_tab_keyvaluemarker");
+        keyvaluemarkerEle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            labeltool.stopTrace();
+            DATA.map(function(datum) {
+                return datum.node.addEventListener("click", function(e) {
+                    console.log(this.id);
+                }.bind(datum));
+            });
+        }, true);
+
+        let contentfillerEle = document.querySelector("#pingan_tm_tab_contentfiller");
+        contentfillerEle.addEventListener('click', function(e) {
+            labeltool.startTrace();
+        });
 
     </script>
 </body>

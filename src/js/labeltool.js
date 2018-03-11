@@ -6,12 +6,12 @@
  */
 
 class labelTool {
-    constructor(svgContainer, imgContainer, datalist, count = 0) {
+    constructor(svgContainer, imgContainer, datalist) {
         this.img = null;
         this.svgContainer = svgContainer;
         this.imgContainer = imgContainer;
         this.datalist = datalist;
-        this.count = count;
+        this.count = datalist.slice(-1).id ? (datalist.slice(-1).id + 1) : 0;
         this.stretchRate = 1;
 
         this.startX = null;
@@ -42,8 +42,7 @@ class labelTool {
     }
 
     stopTrace() {
-        this.clickEvent = null;
-        this.mouseMoveEvent = null;
+        // this.svgContainer.removeEventListener('click', getEventListeners(this.svgContainer)[click].forEach(e => e.listener));
     }
 
     createLabelMarkers() {
@@ -62,7 +61,6 @@ class labelTool {
         this.cycleEle.setAttribute('stroke-opacity', 0.8);
         this.cycleEle.setAttribute('fill', 'grey');
         this.cycleEle.setAttribute('fill-opacity', 0.2);
-        this.cycleEle.setAttribute('class', 'pingan-tm-selecthover');
         this.svgContainer.appendChild(this.cycleEle);
 
         // <text x="0" y="15" fill="red">I love SVG</text>
@@ -75,32 +73,7 @@ class labelTool {
     }
 
     createEvents() {
-        this.clickEvent = this.svgContainer.addEventListener('click', function(e) {
-            switch(this.step) {
-                case 1:
-                    this.startX = e.offsetX;
-                    this.startY = e.offsetY;
-                    this.step = 2;
-                    break;
-                case 2:
-                    this.step = 3;
-                    break;
-                case 3:
-                    this.count++;
-                    this.step = 1;
-                    this.cycleEle.setAttribute("r", 0);
-                    let outputdata = {
-                        id: this.count,
-                        node: this.currentNode.cloneNode(true)
-                    }
-                    this.datalist.push(outputdata);
-                    this.svgContainer.appendChild(outputdata.node);
-                    this.currentNode.setAttribute('points', '');
-                    break;
-                default:
-                    break;
-            }
-        }.bind(this));
+        this.clickEvent = this.svgContainer.addEventListener('click', this.clickEventFun.bind(this));
 
         this.mouseMoveEvent = this.svgContainer.addEventListener('mousemove', function(e){
             if(this.step === 2) {
@@ -145,6 +118,33 @@ class labelTool {
             this.textNode.innerHTML = `(${e.offsetX}, ${e.offsetY})`;
 
         }.bind(this));
+    }
+
+    clickEventFun(e) {
+        switch(this.step) {
+            case 1:
+                this.startX = e.offsetX;
+                this.startY = e.offsetY;
+                this.step = 2;
+                break;
+            case 2:
+                this.step = 3;
+                break;
+            case 3:
+                this.count++;
+                this.step = 1;
+                this.cycleEle.setAttribute("r", 0);
+                let outputdata = {
+                    id: this.count,
+                    node: this.currentNode.cloneNode(true)
+                }
+                this.datalist.push(outputdata);
+                this.svgContainer.appendChild(outputdata.node);
+                this.currentNode.setAttribute('points', '');
+                break;
+            default:
+                break;
+        }
     }
 }
         
