@@ -7,9 +7,6 @@
     <title>Document</title>
     <link rel="stylesheet" href="./stylesheet/index.css">
     <link rel="stylesheet" href="./libs/css/bootstrap.min.css">
-    <script src="./libs/js/jquery.min.js"></script>
-    <script src="./libs/js/bootstrap.min.js"></script>
-    <script src="./javascript/labeltool.js"></script>
 </head>
 <body>
     <header>
@@ -18,8 +15,17 @@
     <section class="container-fluid">
         <div class="row">
             <div id='qiniu_tm_leftpanel' class="col-9">
-                <div>
-                    <input id='qiniu_tm_imgselector' type="file" />
+                <div id="qiniu_tm_listcontainer">
+                    <p>新建样本票据：</p>
+                    <div class="input-group mb-3">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id='qiniu_tm_imgselector'>
+                            <label class="custom-file-label" for="qiniu_tm_imgselector">新建票据样本</label>
+                        </div>
+                    </div>
+                    <br />
+                    <p>当前已标注的票据：</p>
+                    <div id="qiniu_tm_listcontainer_list" class="list-group"></div>
                 </div>
                 <div id='qiniu_tm_imgcontainer'>
                     <div>
@@ -50,8 +56,8 @@
                     </div>
     
                     <div id="qiniu_tm_detailpanel_btngroup">
-                        <button type="button" class="btn btn-secondary btn-sm">返回</button>
-                        <button type="button" class="btn btn-primary btn-sm">保存</button>
+                        <button id="qiniu_tm_detailpanel_btngroup_cancel" type="button" class="btn btn-secondary btn-sm">返回</button>
+                        <button id="qiniu_tm_detailpanel_btngroup_submit" type="button" class="btn btn-primary btn-sm">保存</button>
                     </div>
                 </div>
             </div>
@@ -61,7 +67,9 @@
         <p>@right reserved by Qiniu.com</p>
     </footer>
 
-
+    <script src="./libs/js/jquery.min.js"></script>
+    <script src="./libs/js/bootstrap.min.js"></script>
+    <script src="./javascript/labeltool.js"></script>
     <script src="./javascript/app.js" defer></script>
 </body>
 </html>

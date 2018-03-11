@@ -31,22 +31,23 @@ window.onload = function() {
     let imgContainer = document.querySelector('#qiniu_tm_img');
     labeltool = new labelTool(svgContainer, imgContainer, DATA);
 
-    //  initial tabs by bootstrap
-    $('#qiniu_tm_detail_tab_header a').on('click', function (e) {
-        e.preventDefault();
-        $(this).tab('show');
-    });
+    //  load list on the server
+    loadList ();
 
+    document.querySelector("#qiniu_tm_imgcontainer").hidden = true;
     document.querySelector('#qiniu_tm_imgselector').addEventListener('change', function(e) {
         imgData = window.URL.createObjectURL(e.target.files[0]);
         document.querySelector('#qiniu_tm_img').src = imgData;
         labeltool.init(imgData);
+
+        document.querySelector("#qiniu_tm_listcontainer").hidden = true;
+        document.querySelector("#qiniu_tm_imgcontainer").hidden = false;
     });
 }
 
 
 
-function refreshList(Container, data) {
+function refreshList (Container, data) {
     let tmp = '';
     data.forEach(function(datum){
         tmp +=  `<div class="card bg-light ${datum.isKey ? 'text-primary border-primary' : 'text-success border-success'} mb-3">
@@ -98,8 +99,8 @@ function refreshList(Container, data) {
     }));
 }
 
-loadTemplateLabels = function() {
-    fetch('/json/data.json').then(e => e.json()).then(function(data) {
+function loadTemplateLabels () {
+    fetch('/mockdata/data.json').then(e => e.json()).then(function(data) {
         let tmplist = [];
         data.key.forEach(e => tmplist.push({
             position: e.coord,
@@ -119,6 +120,15 @@ loadTemplateLabels = function() {
         
         DATA = new NiuArray();
         DATA.push(tmplist);
+    });
+}
+
+function loadList () {
+    fetch('/mockdata/list.json').then(e => e.json()).then(function(data) {
+        let tmp = data.map(e => {return `<button type="button" class="list-group-item list-group-item-action">
+                                    ${e}
+                                </button>`});
+        document.querySelector('#qiniu_tm_listcontainer_list').innerHTML = tmp.join('');
     });
 }
 
@@ -159,3 +169,11 @@ function setValueFun(e) {
     DATA[ind].node.setAttribute('fill', '#28a745');
     refreshList(document.querySelector("#qiniu_tm_contentfiller"), DATA);
 }
+
+document.querySelector('#qiniu_tm_detailpanel_btngroup_cancel').addEventListener('click', function(e) {
+    location.reload();
+});
+
+document.querySelector('#qiniu_tm_detailpanel_btngroup_submit').addEventListener('click', function(e) {
+    
+});

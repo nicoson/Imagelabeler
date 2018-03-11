@@ -68,6 +68,8 @@ class labelTool {
         this.textNode.setAttribute('id', 'tmp_text');
         this.textNode.setAttribute('x', '0');
         this.textNode.setAttribute('y', '0');
+        this.textNode.setAttribute('stroke', 'blue');
+        this.textNode.setAttribute('stroke-width', 1);
         this.textNode.innerHTML = null;
         this.svgContainer.appendChild(this.textNode);
     }
