@@ -73,9 +73,15 @@ function refreshList (Container, data) {
                     </div>
                     <div class="card-body">
                         <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">名称</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control js-qiniu-tm-focus" placeholder="standard name" data-item="standard_name" data-id="${datum.id || ''}" value="${datum.standard_name || ''}" ／>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label class="col-sm-3 col-form-label">内容</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control js-qiniu-tm-focus" placeholder="content" data-item="standard_name" data-id="${datum.id || ''}" value="${datum.standard_name || ''}" ／>
+                                <input type="text" class="form-control js-qiniu-tm-focus" placeholder="content" data-item="content" data-id="${datum.id || ''}" value="${datum.content || ''}" ／>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -137,6 +143,11 @@ function loadTemplateLabels () {
     });
 }
 
+document.querySelector('#qiniu_tm_listcontainer_clear').addEventListener('click', function(e) {
+    localStorage.removeItem('data');
+    location.reload();
+});
+
 //  binding box status
 document.querySelectorAll('#qiniu_tm_detailpanel_toolbox label')[0].addEventListener("click", function(e) {
     document.querySelectorAll('polygon').forEach(e => e.removeEventListener('click', setKeyFun));
@@ -191,11 +202,13 @@ function loadPage () {
     // });
 
     let data = localStorage.data ? JSON.parse(localStorage.data) : [];
-    if(data.length == 0) return;
-    let tmp = data.map(e => {return `<button type="button" class="list-group-item list-group-item-action" onclick="">
-                                        ${e.fileName}
-                                    </button>`});
-    document.querySelector('#qiniu_tm_listcontainer_list').innerHTML = tmp.join('');
+    if(data.length != 0) {
+        let tmp = data.map(e => {return `<button type="button" class="list-group-item list-group-item-action" onclick="">
+                                            ${e.fileName}
+                                        </button>`});
+        document.querySelector('#qiniu_tm_listcontainer_list').innerHTML = tmp.join('');
+    }
+    
 
     let cateSelector = localStorage.cate ? localStorage.cate : null;
     if(cateSelector != null) {
