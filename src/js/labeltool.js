@@ -11,7 +11,7 @@ class labelTool {
         this.svgContainer = svgContainer;
         this.imgContainer = imgContainer;
         this.datalist = datalist;
-        this.count = datalist.slice(-1).id ? (datalist.slice(-1).id + 1) : 0;
+        this.count = datalist.slice(-1).length ? (datalist.slice(-1)[0].id + 1) : 0;
         this.stretchRate = 1;
 
         this.startX = null;
@@ -139,7 +139,7 @@ class labelTool {
                 let outputdata = {
                     id: this.count,
                     node: this.currentNode.cloneNode(true),
-                    bbox: this.currentNode.getAttribute('points').split(' ').map(e => e.split(',')),
+                    bbox: this.currentNode.getAttribute('points').split(' ').map(e => e.split(',')).map(e => e.map(e => e*this.stretchRate)),
                     isKey: false
                 }
                 this.datalist.push(outputdata);
@@ -150,6 +150,30 @@ class labelTool {
             default:
                 break;
         }
+    }
+
+    inputBBox(datalist) {
+        this.datalist = datalist;
+        this.count = datalist.slice(-1)[0].id ? (datalist.slice(-1)[0].id + 1) : 0;
+
+        this.datalist.forEach(function(datum) {
+            let points =   `${datum.bbox[0][0]/this.stretchRate},${datum.bbox[0][1]/this.stretchRate} 
+                            ${datum.bbox[1][0]/this.stretchRate},${datum.bbox[1][1]/this.stretchRate} 
+                            ${datum.bbox[2][0]/this.stretchRate},${datum.bbox[2][1]/this.stretchRate} 
+                            ${datum.bbox[3][0]/this.stretchRate},${datum.bbox[3][1]/this.stretchRate}`;
+            
+            let tempNode = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            tempNode.setAttribute('stroke', datum.isKey ? '#1E90FF' : '#28a745');
+            tempNode.setAttribute('stroke-width', 1);
+            tempNode.setAttribute('stroke-opacity', 1);
+            tempNode.setAttribute('fill', datum.isKey ? '#1E90FF' : '#28a745');
+            tempNode.setAttribute('fill-opacity', 0.2);
+            tempNode.setAttribute('class', 'qiniu-tm-selecthover');
+            tempNode.setAttribute('data-id', datum.id);
+            tempNode.setAttribute('points', points);
+            this.svgContainer.appendChild(tempNode);
+            datum.node = tempNode;
+        }.bind(this));
     }
 }
         

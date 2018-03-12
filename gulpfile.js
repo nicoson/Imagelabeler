@@ -100,7 +100,7 @@ gulp.task('js', function() {
 	// with sourcemaps all the way down
 	if(argv.env == ENV_Production) {
 		return gulp.src(paths.appjs)
-		.pipe(babel({presets: ['es2015']}))
+		// .pipe(babel({presets: ['es2015']}))
 		// .pipe(sourcemaps.init())
 		.pipe(uglify())
 		// .pipe(concat('all.min.js'))
@@ -204,7 +204,8 @@ gulp.task('browserSync', ['less', 'js'], function() {
 	//	set server
     browserSync.init({
         server: destDir,
-        startPath: '/index.html'
+		startPath: '/index.html',
+		port: 8000
     });
 
     gulp.watch(paths.less, ['less']);
