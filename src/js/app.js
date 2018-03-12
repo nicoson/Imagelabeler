@@ -23,6 +23,7 @@ class NiuArray extends Array {
 }
 
 let labeltool = null;
+let FILENAME = null;
 let DATA = new NiuArray();  //  2-way binding page data
 DATA.addContainer(document.querySelector("#qiniu_tm_contentfiller"));
 
@@ -32,8 +33,9 @@ window.onload = function() {
     labeltool = new labelTool(svgContainer, imgContainer, DATA);
 
     //  load list on the server
-    loadList ();
+    loadPage();
 
+    // binding change event for image container
     document.querySelector("#qiniu_tm_imgcontainer").hidden = true;
     document.querySelector('#qiniu_tm_imgselector').addEventListener('change', function(e) {
         imgData = window.URL.createObjectURL(e.target.files[0]);
@@ -43,15 +45,21 @@ window.onload = function() {
         document.querySelector("#qiniu_tm_listcontainer").hidden = true;
         document.querySelector("#qiniu_tm_imgcontainer").hidden = false;
 
-        let fileName = e.target.files[0].name;
+        let subName = e.target.files[0].name;
+        let mainName = document.querySelector("#qiniu_tm_cateselector").value;
+        FILENAME = mainName + ' - ' + subName;
         let odata = localStorage.data ? JSON.parse(localStorage.data) : [];
-        let ind = odata.findIndex(e => e.fileName == fileName);
+        let ind = odata.findIndex(e => e.fileName == FILENAME);
         if(ind > -1) {
             odata[ind].data.forEach(e => DATA.push(e));
             setTimeout(function(){return labeltool.inputBBox(DATA)}, 1000);
         }
     });
 }
+
+document.querySelector('#qiniu_tm_cateselector').addEventListener("change", function(e) {
+    localStorage.cate = e.target.value;
+});
 
 function refreshList (Container, data) {
     let tmp = '';
@@ -174,7 +182,7 @@ document.querySelector('#qiniu_tm_detailpanel_btngroup_cancel').addEventListener
     location.reload();
 });
 
-function loadList () {
+function loadPage () {
     // fetch('http://localhost:3000/list').then(e => e.json()).then(function(data) {
     //     let tmp = data.map(e => {return `<button type="button" class="list-group-item list-group-item-action">
     //                                 ${e}
@@ -188,6 +196,11 @@ function loadList () {
                                         ${e.fileName}
                                     </button>`});
     document.querySelector('#qiniu_tm_listcontainer_list').innerHTML = tmp.join('');
+
+    let cateSelector = localStorage.cate ? localStorage.cate : null;
+    if(cateSelector != null) {
+        document.querySelector('#qiniu_tm_cateselector').value = cateSelector;
+    }    
 }
 
 document.querySelector('#qiniu_tm_listcontainer_upload').addEventListener('click', function(e) {
@@ -210,7 +223,7 @@ document.querySelector('#qiniu_tm_detailpanel_btngroup_submit').addEventListener
 function saveResult() {
     let fileName = document.querySelector('#qiniu_tm_imgselector').files;
     if(fileName.length == 0) return;
-    fileName = fileName[0].name;
+    fileName = FILENAME;
 
     let data = {
         fileName: fileName,

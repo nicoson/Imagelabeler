@@ -18,8 +18,44 @@
                 <div id="qiniu_tm_listcontainer">
                     <p>新建样本票据：</p>
                     <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="qiniu_tm_cateselector">Options</label>
+                        </div>
+                        <select class="custom-select" id="qiniu_tm_cateselector">
+                            <option value='支票'>支票</option>
+                            <option value='进账单'>进账单</option>
+                            <option value='现金支票'>现金支票</option>
+                            <option value='转账支票'>转账支票</option>
+                            <option value='结算业务委托书'>结算业务委托书</option>
+                            <option value='其他（尾箱查询-白纸A4）'>其他（尾箱查询-白纸A4）</option>
+                            <option value='其他（尾箱查询-业务凭证-大版）'>其他（尾箱查询-业务凭证-大版）</option>
+                            <option value='业务凭证（小版-企业网银业务）'>业务凭证（小版-企业网银业务）</option>
+                            <option value='上海分行贷记凭证'>上海分行贷记凭证</option>
+                            <option value='业务凭证（大版）'>业务凭证（大版）</option>
+                            <option value='业务凭证（小版）'>业务凭证（小版）</option>
+                            <option value='个人转款汇款凭证'>个人转款汇款凭证</option>
+                            <option value='单位现金存款凭证'>单位现金存款凭证</option>
+                            <option value='特种转账借方传票'>特种转账借方传票</option>
+                            <option value='财政直接支付凭证'>财政直接支付凭证</option>
+                            <option value='业务凭证（小版）-USBKey工本费'>业务凭证（小版）-USBKey工本费</option>
+                            <option value='其他借记凭证（白纸A4）'>其他借记凭证（白纸A4）</option>
+                            <option value='其他借记凭证（白纸A4三分之一大）'>其他借记凭证（白纸A4三分之一大）</option>
+                            <option value='内部传票清单（小版）'>内部传票清单（小版）</option>
+                            <option value='其他（尾箱查库信息表-白纸A4）'>其他（尾箱查库信息表-白纸A4）</option>
+                            <option value='内部传票清单（加大版）'>内部传票清单（加大版）</option>
+                            <option value='其他（柜员轧账流水清单-白纸A4）'>其他（柜员轧账流水清单-白纸A4）</option>
+                            <option value='其他（柜员轧账流水清单-业务凭证-大版）'>其他（柜员轧账流水清单-业务凭证-大版）</option>
+                            <option value='内部传票清单（加大版）-提前还款交易清单'>内部传票清单（加大版）-提前还款交易清单</option>
+                            <option value='其他借记凭证（外汇业务（白纸A4）'>其他借记凭证（外汇业务（白纸A4）</option>
+                            <option value='平安银行理财产品销售协议书（个人）'>平安银行理财产品销售协议书（个人）</option>
+                            <option value='票据批量传票清单（白纸三分之一大）'>票据批量传票清单（白纸三分之一大）</option>
+                            <option value='同城特约委托收款凭证（北京分行业务）'>同城特约委托收款凭证（北京分行业务）</option>
+                            <option value='内部传票清单（加大版）票据批量传票清单'>内部传票清单（加大版）票据批量传票清单</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id='qiniu_tm_imgselector'>
+                            <input type="file" class="custom-file-input" id='qiniu_tm_imgselector' ／>
                             <label class="custom-file-label" for="qiniu_tm_imgselector">新建票据样本</label>
                         </div>
                     </div>
