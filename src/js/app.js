@@ -1,11 +1,12 @@
 class NiuArray extends Array {
     constructor(...args) {
         // 调用父类Array的constructor()
-        super(...args)
+        super(...args);
+        this.Container = document.querySelector("#qiniu_tm_contentfiller");
     }
-    addContainer (Container) {
-        this.Container = Container;
-    }
+    // addContainer (Container) {
+    //     this.Container = Container;
+    // }
     push (...args) {
         console.log('监听到数组的变化啦！');
         // 调用父类原型push方法
@@ -25,7 +26,7 @@ class NiuArray extends Array {
 let labeltool = null;
 let FILENAME = null;
 let DATA = new NiuArray();  //  2-way binding page data
-DATA.addContainer(document.querySelector("#qiniu_tm_contentfiller"));
+// DATA.addContainer(document.querySelector("#qiniu_tm_contentfiller"));
 
 window.onload = function() {
     let svgContainer = document.querySelector('#qiniu_tm_imgmarker');
@@ -38,7 +39,7 @@ window.onload = function() {
     // binding change event for image container
     document.querySelector("#qiniu_tm_imgcontainer").hidden = true;
     document.querySelector('#qiniu_tm_imgselector').addEventListener('change', function(e) {
-        imgData = window.URL.createObjectURL(e.target.files[0]);
+        let imgData = window.URL.createObjectURL(e.target.files[0]);
         document.querySelector('#qiniu_tm_img').src = imgData;
         labeltool.init(imgData);
 
@@ -203,17 +204,28 @@ function loadPage () {
 
     let data = localStorage.data ? JSON.parse(localStorage.data) : [];
     if(data.length != 0) {
-        let tmp = data.map(e => {return `<button type="button" class="list-group-item list-group-item-action" onclick="">
-                                            ${e.fileName}
-                                        </button>`});
-        document.querySelector('#qiniu_tm_listcontainer_list').innerHTML = tmp.join('');
+        let tmp = data.reverse().map(datum => {return `<li class="list-group-item">
+                                            ${datum.fileName}
+                                            <button type="button" class="close" aria-label="Close">
+                                                <span aria-hidden="true" class="js-qiniu-tm-listitem-remove" data-filename="${datum.fileName || ''}">&times;</span>
+                                            </button>
+                                        </li>`});
+        document.querySelector('#qiniu_tm_listcontainer_list ul').innerHTML = tmp.join('');
     }
     
 
     let cateSelector = localStorage.cate ? localStorage.cate : null;
     if(cateSelector != null) {
         document.querySelector('#qiniu_tm_cateselector').value = cateSelector;
-    }    
+    }
+
+    document.querySelectorAll(".js-qiniu-tm-listitem-remove").forEach(ele => ele.addEventListener("click", function(e) {
+        let odata = localStorage.data ? JSON.parse(localStorage.data) : [];
+        let ind = odata.findIndex(t => t.fileName == e.target.dataset.filename);
+        odata.splice(ind, 1);
+        localStorage.data = JSON.stringify(odata);
+        location.reload();
+    }));
 }
 
 document.querySelector('#qiniu_tm_listcontainer_upload').addEventListener('click', function(e) {
@@ -226,7 +238,7 @@ document.querySelector('#qiniu_tm_listcontainer_upload').addEventListener('click
         body: localStorage.data
     }
 
-    fetch('http://localhost:3000/submit', postBody).then(e => console.log('success!'));
+    fetch('/submit', postBody).then(e => console.log('success!'));
 });
 
 document.querySelector('#qiniu_tm_detailpanel_btngroup_submit').addEventListener('click', function(e) {

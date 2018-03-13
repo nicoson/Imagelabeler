@@ -90,8 +90,7 @@ class labelTool {
                 this.cycleEle.setAttribute('cy', this.centerY);
                 this.cycleEle.setAttribute('r', this.radius);
                 
-                let points = `${this.startX},${this.startY} ${this.endX},${this.startY} 
-                            ${this.endX},${this.endY} ${this.startX},${this.endY}`;
+                let points = `${this.startX},${this.startY} ${this.endX},${this.startY} ${this.endX},${this.endY} ${this.startX},${this.endY}`;
                 this.currentNode.setAttribute('points', points);
             } else if (this.step === 3) {
                 // <polygon points="200,10 250,190 160,210" style="fill:lime;stroke:purple;stroke-width:1"/>

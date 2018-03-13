@@ -100,7 +100,7 @@ gulp.task('js', function() {
 	// with sourcemaps all the way down
 	if(argv.env == ENV_Production) {
 		return gulp.src(paths.appjs)
-		// .pipe(babel({presets: ['es2015']}))
+		.pipe(babel({presets: ["babel-preset-es2015","babel-preset-es2016","babel-preset-es2017"]}))
 		// .pipe(sourcemaps.init())
 		.pipe(uglify())
 		// .pipe(concat('all.min.js'))
