@@ -145,8 +145,11 @@ function loadTemplateLabels () {
 }
 
 document.querySelector('#qiniu_tm_listcontainer_clear').addEventListener('click', function(e) {
-    localStorage.removeItem('data');
-    location.reload();
+    let conf = confirm("您确定要删除本地所有的纪录吗？");
+    if(conf == true) {
+        localStorage.removeItem('data');
+        location.reload();
+    }
 });
 
 //  binding box status
@@ -238,7 +241,29 @@ document.querySelector('#qiniu_tm_listcontainer_upload').addEventListener('click
         body: localStorage.data
     }
 
-    fetch('/submit', postBody).then(e => console.log('success!'));
+    fetch('/submit', postBody).then(function(response) {
+        console.log(response.ok);
+        if(response.ok) {
+            let cls = document.querySelector('#qiniu_tm_success_alert').getAttribute('class').replace('qiniu-tm-hidden', '');
+            document.querySelector('#qiniu_tm_success_alert').setAttribute('class', cls);
+            setTimeout(function() {
+                let cls = document.querySelector('#qiniu_tm_success_alert').getAttribute('class') + 'qiniu-tm-hidden';
+                document.querySelector('#qiniu_tm_success_alert').setAttribute('class', cls);
+            }, 1000);
+            console.log('update success!');
+        } else {
+            let cls = document.querySelector('#qiniu_tm_fail_alert').getAttribute('class').replace('qiniu-tm-hidden', '');
+            document.querySelector('#qiniu_tm_fail_alert').setAttribute('class', cls);
+            setTimeout(function() {
+                let cls = document.querySelector('#qiniu_tm_fail_alert').getAttribute('class') + 'qiniu-tm-hidden';
+                document.querySelector('#qiniu_tm_fail_alert').setAttribute('class', cls);
+            }, 1000);
+            console.log('update failed!');
+        }
+        
+    }).catch(function(e) {
+        console.log(e);
+    });
 });
 
 document.querySelector('#qiniu_tm_detailpanel_btngroup_submit').addEventListener('click', function(e) {
